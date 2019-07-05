@@ -1,0 +1,6 @@
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+	}
+}
+rootProject.name = 'ProgettoOOP-Marco-Carloni-Matteo-Cardinali-'
