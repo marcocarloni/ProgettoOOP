@@ -61,7 +61,8 @@ public class Student implements Serializable
     public char getPreviousPartecipation() { return previousPartecipation;  }
     
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return "Student{" +
                 "Age=" + age +
                 ", Sex='" + sex + '\'' +
