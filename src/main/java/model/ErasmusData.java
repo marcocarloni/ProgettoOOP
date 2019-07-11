@@ -27,7 +27,7 @@ public class ErasmusData implements Serializable
 	private char typeWorkSector;
 	private int studyLenght;
 	private int workLenght;
-	private boolean shortDuration;
+	private char shortDuration;
 	private String studyStartDate;
 	private String workStartDate;
 	private	int consortiumAgreementNumber;
@@ -38,8 +38,8 @@ public class ErasmusData implements Serializable
 	private char taughtHostLang;
 	private	String languageTaught;
 	private	String lingPreparation;
-	private float studyGrant;
-	private float workGrant;
+	private double studyGrant;
+	private double workGrant;
 	private char previousPartecipation;
 	private String qualificationHost;
 
@@ -80,7 +80,7 @@ public class ErasmusData implements Serializable
 	 * @param qualificationHost
 	 */
 
-	public ErasmusData(String homeInstitution,String countryHome,int age,char sex,String nationality,int subjectArea,int levelStudy,int yearsPrior,char mobility, String 	hostInstitution,String countryHost,String workPlacement,String countryWP,char 	enterpriseSize,char 	typeWorkSector,int studyLenght,int workLenght,boolean shortDuration,String 	studyStartDate,String 	workStartDate,int consortiumAgreementNumber,int ECTSCreditStudy,int ECTSCreditWork,int 	totalCredits,int sevSupplement,char taughtHostLang,String languageTaught,String 	lingPreparation,float studyGrant,float workGrant,char previousPartecipation,String 	qualificationHost)
+	public ErasmusData(String homeInstitution,String countryHome,int age,char sex,String nationality,int subjectArea,int levelStudy,int yearsPrior,char mobility, String 	hostInstitution,String countryHost,String workPlacement,String countryWP,char 	enterpriseSize,char 	typeWorkSector,int studyLenght,int workLenght,char shortDuration,String 	studyStartDate,String 	workStartDate,int consortiumAgreementNumber,int ECTSCreditStudy,int ECTSCreditWork,int 	totalCredits,int sevSupplement,char taughtHostLang,String languageTaught,String 	lingPreparation,double studyGrant,double workGrant,char previousPartecipation,String 	qualificationHost)
 	{
 		this.homeInstitution = homeInstitution;
 		this.countryHome = countryHome;
@@ -135,7 +135,7 @@ public class ErasmusData implements Serializable
 	public char getTypeWorkSector() {return typeWorkSector;}
 	public int getStudyLenght() {return subjectArea;}
 	public int getWorkLenght() {return workLenght;}
-	public boolean getShortDuration() {return shortDuration;}
+	public char getShortDuration() {return shortDuration;}
 	public String getStudyStartDate() {return studyStartDate;}
 	public String getWorkStartDate() {return workStartDate;}
 	public int getConsortiumAgreementNumber() {return consortiumAgreementNumber;}
@@ -146,8 +146,8 @@ public class ErasmusData implements Serializable
 	public char getTaughtHostLang() {return taughtHostLang;}
 	public String getLanguageTaught() {return languageTaught;}
 	public String getLingPreparation() {return lingPreparation;}
-	public float getStudyGrant() {return studyGrant;}
-	public float getWorkGrant() {return workGrant;}
+	public double getStudyGrant() {return studyGrant;}
+	public double getWorkGrant() {return workGrant;}
 	public char getPreviousPartecipation() {return previousPartecipation;}
 	public String getQualificationHost() {return qualificationHost;}
 
