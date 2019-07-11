@@ -19,7 +19,7 @@ import org.json.simple.parser.ParseException;
 public class CsvDownloader 
 {
 
-	public static void main(String[] args) 
+	public void Downloader() 
 	{
 
 		String url = "http://data.europa.eu/euodp/data/api/3/action/package_show?id=erasmus-mobility-statistics-2008-09";
@@ -69,8 +69,8 @@ public class CsvDownloader
 		{
 			e.printStackTrace();
 		}
-		
-	}
+	}	
+	
 	
 	public static void download(String url, String fileName) throws Exception 
 	{
