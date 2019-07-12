@@ -1,152 +1,124 @@
 package utils;
-import java.io.*;
-import java.net.URL;
-import java.net.URI;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import model.ErasmusData;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.opencsv.CSVReader;
+
 import model.MetaData;
-
-import org.json.JSONObject;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
-import org.springframework.boot.json.BasicJsonParser;
-import java.lang.*;
-import java.lang.reflect.Field;
-
-
-
-/**
- * Classe per la gestione del parsing del dataset precedentemente scaricato attraverso la classe "CsvDownloader"
- */
 
 public class CsvParser 
 {
-	
-	private static ArrayList<ErasmusData> ED = new ArrayList<ErasmusData>();
-	final static String COMMA_DELIMITER = ";";
 
-	static {
-		
-			String url = "http://data.europa.eu/euodp/data/api/3/action/package_show?id=erasmus-mobility-statistics-2008-09";
-			
-			try {
-					readdata(url);
-				} catch (IOException | ParseException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			
-			try {
-					insertdata("Dataset.csv");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}	
-			}
-	
-	
-	/** Metodo che effettua il download dei dati dall'URL passatogli, effettua un primo controllo di esistenza del file 
-	 * e tramite il try scarica i dati.
-	 * @param url
-	 * @param fileName
-	 * @throws Exception
-	 */
-	public static void download(String url, String fileName) throws Exception
+	public static void main(String[] args) throws IOException 
 	{
-	    File f = new File(fileName);
-	    /**
-	     *Qui andrebbe il controllo per vedere se esistono già i file e crearli in caso contrario.
-	     *Attualmente se i file già esistono vengono cancellati per essere poi ricreati.
-	     */
-	    if (f.exists()) {
-	    	f.delete();
-	    }
-	    
-		try (InputStream in = URI.create(url).toURL().openStream()) {
-			Files.copy(in, Paths.get(fileName));
-		}
-		System.out.println("Download effettuato");
+
+		List<MetaData> dati = parseCSVFileLineByLine();
 	}
-	
-	/** Metodo che effettua la lettura dei dati dall'URL passatogli, crea due stringhe data e line le quali si occupano di leggere riga
-	 *  per riga il file dell'url. Line, tramite il while controlla l'andata a capo del file di testo(quindi la fine della riga).
-	 *   Successivamente, tramite il for
-	 *  vado a cercare nel file le parole "format","url","csv" da cui poi vado a scaricare i dati 
-	 * @param url url dal quale aprire il file da leggere ed analizzare
-	 * @throws Exception
+
+	/**
+	 * Converte una stringa in un intero, gestendo anche le stringhe nulle
+	 *
+	 * @param  s    la stringa da convertire
+	 * @return      l'intero corrispondente
 	 */
-	public static void readdata(String url) throws Exception
+	public static int StringToInt(String s)
 	{
-		URLConnection openConnection = new URL(url).openConnection();
-		openConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-		InputStream in = openConnection.getInputStream();
-		String data = "";
-		String line = "";
-		try {
-			InputStreamReader inR = new InputStreamReader(in);
-			BufferedReader buf = new BufferedReader(inR);
-			
-				while ((line = buf.readLine()) != null) { 
-					data+= line;
-				}
-			} finally {
-				in.close();
-				}
-		 
-		JSONObject obj = (JSONObject) JSONValue.parseWithException(data);
-		JSONObject objI = (JSONObject) (obj.get("result"));
-		JSONArray objA = (JSONArray) (objI.get("resources"));
+		int n=0;
 		
-		for(Object o: objA) {                 
-		    if (o instanceof JSONObject) {
-		        JSONObject o1 = (JSONObject)o; 
-		        String format = (String)o1.get("format");
-		        String urlD = (String)o1.get("url");
-		        if(format.equals("csv"))
-		        {
-		        	download(urlD, "Dataset.csv");
-		        }
-		    }
+		if (!s.isEmpty())
+		{
+			n=Integer.parseInt(s);
 		}
-		System.out.println("Lettura effettuata");
+		
+		return n;
 	}
 	
 	/**
-	 * Questa funzione effettua il parsing dei dati appena scaricati.
-	 * Interpreta le stringhe e crea gli oggetti assegnando i parametri agli attributi.
-	 * @param file
-	 * @throws Exception
+	 * Converte una stringa in un carattere, gestendo anche le stringhe nulle
+	 *
+	 * @param  s    la stringa da convertire
+	 * @return      il carattere corrispondente
 	 */
-	
-	public static void insertdata(String file) throws Exception
+	public static char StringToChar(String s)
 	{
-		List<List<String>> records = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			String line;
-			while ((line = br.readLine()) != null) { 
-				String[] values = line.split(COMMA_DELIMITER); 
-				records.add(Arrays.asList(values));
-				ED.add(new ErasmusData(values[0], values[1], Integer.parseInt(values[2]), (values[3]).charAt(0),values[4],Integer.parseInt( values[5])
-						,Integer.parseInt( values[6]),Integer.parseInt(values[7]) ,(values[8]).charAt(0), values[9], values[10], values[11],values[12],
-						(values[13]).charAt(0), (values[14]).charAt(0), 
-						Integer.parseInt(values[15]),Integer.parseInt(values[16]),(values[17]).charAt(0), values[18], values[19],
-						Integer.parseInt(values[20]),Integer.parseInt(values[21]) ,Integer.parseInt(values[22]),Integer.parseInt(values[23]),Integer.parseInt(values[24]),
-						(values[25]).charAt(0), values[26], values[27],Double.parseDouble(values[28]),Double.parseDouble(values[29]),
-						(values[30]).charAt(0),values[31]));
-			}
-		br.close();
-		} catch (IOException i) {
-			i.printStackTrace();
-			return;
+		char c='\0';
+		
+		if (!s.isEmpty())
+		{
+			c=s.charAt(0);
 		}
-		System.out.println("Parsing effettuato");
-	}	
-}
+		
+		return c;
+	}
+	
+	/**
+	 * Effettua il parsing riga per riga di tutti i record del dataset
+	 *
+	 * @return      una lista di oggetti MetaData corrispondenti a tutti gli elementi del dataset
+	 */
+	private static List<MetaData> parseCSVFileLineByLine() throws IOException 
+	{
+		//crea un oggetto CSVReader, responsabile della lettura e del parsing del dataset
+		CSVReader reader = new CSVReader(new FileReader("C:\\Users\\Marco\\Desktop\\s.csv"), ';');
+		
+		List<MetaData> emps = new ArrayList<MetaData>();
+		String[] record = null;
+		
+		//la prima riga contiene i nomi dei campi del dataset, percui viene saltata
+		reader.readNext();
+		
+		int x=1;
+		while((record = reader.readNext()) != null)
+		{
+			System.out.println(x);x++;
+		
+			MetaData elemento = new MetaData(
+					record[0],
+					record[1],
+					StringToInt(record[2]),
+					StringToChar(record[3]),
+					record[4],
+					StringToInt(record[5]),
+					StringToInt(record[6]),
+					StringToInt(record[7]),
+					StringToChar(record[8]),
+					record[9],
+					record[10],
+					record[11],
+					record[12],
+					StringToChar(record[13]),
+					StringToChar(record[14]),
+					Double.parseDouble(record[15]),
+					Double.parseDouble(record[16]),
+					StringToChar(record[17]),
+					record[18],
+					record[19],
+					record[20],
+					StringToInt(record[21]),
+					StringToInt(record[22]),
+					StringToInt(record[23]),
+					Double.parseDouble(record[24]),
+					StringToChar(record[25]),
+					record[26],
+					record[27],
+					Double.parseDouble(record[28]),
+					Double.parseDouble(record[29]),
+					StringToChar(record[30]),
+					record[31]);
+			
+			emps.add(elemento);
+		}
+		
+		reader.close();
+		
+		System.out.println(emps);
+		return emps;
+	}
 
+}
 
 
 

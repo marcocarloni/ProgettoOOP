@@ -24,7 +24,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/Matteo/git/ProgettoOOP-Marco-Carloni-Matteo-Cardinali-/lib/json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Matteo/git/ProgettoOOP-Marco-Carloni-Matteo-Cardinali-/lib/opencsv-4.6.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang3-3.9.jar"/>
+	<classpathentry kind="lib" path="libs/json-simple-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/opencsv-4.6.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
