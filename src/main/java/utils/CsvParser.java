@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.opencsv.CSVReader;
 
-import model.MetaData;
+import model.ErasmusData;
 
 public class CsvParser 
 {
@@ -15,7 +15,7 @@ public class CsvParser
 	public static void main(String[] args) throws IOException 
 	{
 
-		List<MetaData> dati = parseCSVFileLineByLine();
+		List<ErasmusData> dati = parseCSVFileLineByLine();
 	}
 
 	/**
@@ -59,30 +59,27 @@ public class CsvParser
 	 *
 	 * @return      una lista di oggetti MetaData corrispondenti a tutti gli elementi del dataset
 	 */
-	private static List<MetaData> parseCSVFileLineByLine() throws IOException 
+	private static List<ErasmusData> parseCSVFileLineByLine() throws IOException 
 	{
 		//crea un oggetto CSVReader, responsabile della lettura e del parsing del dataset
-		CSVReader reader = new CSVReader(new FileReader("C:\\Users\\Marco\\Desktop\\s.csv"), ';');
+		CSVReader reader = new CSVReader(new FileReader("Dataset.csv"), ';');
 		
-		List<MetaData> emps = new ArrayList<MetaData>();
+		List<ErasmusData> dati = new ArrayList<ErasmusData>();
 		String[] record = null;
 		
 		//la prima riga contiene i nomi dei campi del dataset, percui viene saltata
 		reader.readNext();
 		
-		int x=1;
 		while((record = reader.readNext()) != null)
 		{
-			System.out.println(x);x++;
-		
-			MetaData elemento = new MetaData(
+			ErasmusData elemento = new ErasmusData(
 					record[0],
 					record[1],
 					StringToInt(record[2]),
 					StringToChar(record[3]),
 					record[4],
 					StringToInt(record[5]),
-					StringToInt(record[6]),
+					record[6],
 					StringToInt(record[7]),
 					StringToChar(record[8]),
 					record[9],
@@ -108,17 +105,14 @@ public class CsvParser
 					Double.parseDouble(record[29]),
 					StringToChar(record[30]),
 					record[31]);
-			
-			emps.add(elemento);
+			System.out.println(elemento);
+			dati.add(elemento);
 		}
 		
 		reader.close();
 		
-		System.out.println(emps);
-		return emps;
+		//System.out.println(dati);
+		return dati;
 	}
 
 }
-
-
-
