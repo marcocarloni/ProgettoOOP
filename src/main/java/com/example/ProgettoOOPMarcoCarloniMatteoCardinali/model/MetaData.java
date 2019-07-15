@@ -1,4 +1,4 @@
-package model;
+package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model;
 
 /**
  * Classe modellante per i metadata

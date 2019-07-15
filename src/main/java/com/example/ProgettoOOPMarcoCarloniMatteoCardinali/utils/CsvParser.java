@@ -1,13 +1,12 @@
-package utils;
+package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
 import com.opencsv.CSVReader;
-
-import model.ErasmusData;
 
 public class CsvParser 
 {

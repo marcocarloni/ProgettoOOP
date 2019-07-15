@@ -1,4 +1,4 @@
-package model;
+package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model;
 
 /**
  *  Classe modellante dei dati contenente gli attributi presenti nel file .csv

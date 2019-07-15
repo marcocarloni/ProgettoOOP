@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import model.ErasmusData;
-import utils.CsvDownloader;
-import utils.CsvParser;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvDownloader;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvParser;
 
 @SpringBootApplication
 public class ProgettoOopMarcoCarloniMatteoCardinaliApplication {

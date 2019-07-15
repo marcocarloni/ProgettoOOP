@@ -1,17 +1,17 @@
 package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.controller;
 
-import  model.MetaData;
-import model.ErasmusData;
-import model.Stat;
-import model.StringCounter;
-import utils.CsvParser;
-import utils.Filters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.ProgettoOopMarcoCarloniMatteoCardinaliApplication;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.MetaData;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.Stat;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.StringCounter;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvParser;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.Filters;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
