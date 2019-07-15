@@ -59,9 +59,7 @@ public class CsvDownloader
 			JSONArray objA = (JSONArray) (objI.get("resources"));
 			
 			JSONObject o1 = (JSONObject)objA.get(1);; 
-			String urlD = (String)o1.get("url");
-			System.out.println(urlD);
-			
+			String urlD = (String)o1.get("url");			
 			d(urlD, "dataset.csv");
 			
 			

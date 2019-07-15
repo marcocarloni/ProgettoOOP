@@ -11,13 +11,6 @@ import model.ErasmusData;
 
 public class CsvParser 
 {
-
-	public static void main(String[] args) throws IOException 
-	{
-
-		List<ErasmusData> dati = parseCSVFileLineByLine();
-	}
-
 	/**
 	 * Converte una stringa in un intero, gestendo anche le stringhe nulle
 	 *
@@ -59,7 +52,7 @@ public class CsvParser
 	 *
 	 * @return      una lista di oggetti MetaData corrispondenti a tutti gli elementi del dataset
 	 */
-	private static List<ErasmusData> parseCSVFileLineByLine() throws IOException 
+	public static List<ErasmusData> Parsing() throws IOException 
 	{
 		//crea un oggetto CSVReader, responsabile della lettura e del parsing del dataset
 		CSVReader reader = new CSVReader(new FileReader("Dataset.csv"), ';');
@@ -105,14 +98,12 @@ public class CsvParser
 					Double.parseDouble(record[29]),
 					StringToChar(record[30]),
 					record[31]);
-			System.out.println(elemento);
-			dati.add(elemento);
+					dati.add(elemento);
 		}
 		
 		reader.close();
-		
-		//System.out.println(dati);
 		return dati;
 	}
+
 
 }
