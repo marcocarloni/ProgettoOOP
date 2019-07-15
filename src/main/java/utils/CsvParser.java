@@ -11,6 +11,7 @@ import model.ErasmusData;
 
 public class CsvParser 
 {
+	private static String MetaData[];
 	/**
 	 * Converte una stringa in un intero, gestendo anche le stringhe nulle
 	 *
@@ -61,7 +62,7 @@ public class CsvParser
 		String[] record = null;
 		
 		//la prima riga contiene i nomi dei campi del dataset, percui viene saltata
-		reader.readNext();
+		 MetaData = reader.readNext();
 		
 		while((record = reader.readNext()) != null)
 		{
@@ -103,6 +104,10 @@ public class CsvParser
 		
 		reader.close();
 		return dati;
+	}
+	public static String[] metad()
+	{
+		return MetaData;
 	}
 
 
