@@ -13,10 +13,13 @@ import utils.CsvParser;
 @SpringBootApplication
 public class ProgettoOopMarcoCarloniMatteoCardinaliApplication {
 
+	public static List<ErasmusData> dati;
+	
 	public static void main(String[] args) {
 		CsvDownloader.Download();
 		try {
-			List<ErasmusData> dati=CsvParser.Parsing();
+			dati=CsvParser.Parsing();
+			
 		}
 		catch(IOException E){
 			E.printStackTrace();

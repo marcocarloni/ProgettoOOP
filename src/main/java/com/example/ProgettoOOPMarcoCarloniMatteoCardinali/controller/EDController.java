@@ -2,7 +2,6 @@ package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.controller;
 
 import  model.MetaData;
 import model.ErasmusData;
-import model.EDService;
 import model.Stat;
 import model.StringCounter;
 import utils.CsvParser;
@@ -11,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.ProgettoOopMarcoCarloniMatteoCardinaliApplication;
+
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,8 +37,12 @@ public class EDController
             i+=1;
         }
         return Meta;
-		
-		
+	}
+	
+	@GetMapping ("/all")
+	public Collection getAll() 
+	{
+		return ProgettoOopMarcoCarloniMatteoCardinaliApplication.dati ;
 	}
 	
 }
