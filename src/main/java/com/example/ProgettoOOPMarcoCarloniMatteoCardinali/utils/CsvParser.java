@@ -10,14 +10,36 @@ import com.opencsv.CSVReader;
 
 public class CsvParser 
 {
-	private static String MetaData[];
+	private String MetaData[];
+	private List<ErasmusData> Data;
+	
+	/**
+	 * Restituisce i metadata cosi come sono nominati nel dataset scaricato
+	 * 
+	 * @return		Un vettore di stringhe contenente i metadata
+	 */
+	public String[] getMetaData()
+	{
+		return MetaData;
+	}
+	
+	/**
+	 * Restituisce tutti i dati contenuti nel dataset
+	 * 
+	 * @return		Una lista di ErasmusData
+	 */
+	public List<ErasmusData> getData()
+	{
+		return Data;
+	}
+	
 	/**
 	 * Converte una stringa in un intero, gestendo anche le stringhe nulle
 	 *
 	 * @param  s    la stringa da convertire
 	 * @return      l'intero corrispondente
 	 */
-	public static int StringToInt(String s)
+	private static int StringToInt(String s)
 	{
 		int n=0;
 		
@@ -35,7 +57,7 @@ public class CsvParser
 	 * @param  s    la stringa da convertire
 	 * @return      il carattere corrispondente
 	 */
-	public static char StringToChar(String s)
+	private static char StringToChar(String s)
 	{
 		char c='\0';
 		
@@ -52,20 +74,21 @@ public class CsvParser
 	 *
 	 * @return      una lista di oggetti MetaData corrispondenti a tutti gli elementi del dataset
 	 */
-	public static List<ErasmusData> Parsing() throws IOException 
+	@SuppressWarnings("deprecation")
+	public CsvParser(String fileName) throws IOException 
 	{
 		//crea un oggetto CSVReader, responsabile della lettura e del parsing del dataset
-		CSVReader reader = new CSVReader(new FileReader("Dataset.csv"), ';');
+		CSVReader reader = new CSVReader(new FileReader(fileName), ';');
 		
-		List<ErasmusData> dati = new ArrayList<ErasmusData>();
+		Data = new ArrayList<ErasmusData>();
 		String[] record = null;
 		
 		//la prima riga contiene i nomi dei campi del dataset, percui viene saltata
-		 MetaData = reader.readNext();
+		MetaData = reader.readNext();
 		
 		while((record = reader.readNext()) != null)
 		{
-			ErasmusData elemento = new ErasmusData(
+			ErasmusData ED = new ErasmusData(
 					record[0],
 					record[1],
 					StringToInt(record[2]),
@@ -98,16 +121,10 @@ public class CsvParser
 					Double.parseDouble(record[29]),
 					StringToChar(record[30]),
 					record[31]);
-					dati.add(elemento);
+					Data.add(ED);
 		}
 		
 		reader.close();
-		return dati;
 	}
-	public static String[] metad()
-	{
-		return MetaData;
-	}
-
 
 }
