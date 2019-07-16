@@ -14,18 +14,6 @@ public class Stats
     private double sum;
     private int count;
     
-    
-	public Stats(String field, double avg, double devStd, double max, double min, double sum, int count)
-	{
-		this.field = field;
-		this.avg = avg;
-		this.devStd = devStd;
-		this.max = max;
-		this.min = min;
-		this.sum = sum;
-		this.count = count;
-	}
-
 	
 	public String getField() {
 		return field;

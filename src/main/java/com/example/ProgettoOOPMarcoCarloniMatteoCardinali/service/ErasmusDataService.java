@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.MetaData;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.Stats;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvDownloader;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvParser;
 
@@ -40,11 +41,17 @@ public class ErasmusDataService
 		}
 	}
 	
-	public Double getAverage(String field) 
+	public Stats getStats(String field) 
 	{
 		
-		double sum=0;
-		int n=0;
+		Stats statistiche = new Stats();
+		
+		double sum = 0;
+		double min = 0;
+		double max = 0;
+		double avg = 0;
+		double devStd = 0;
+		int count = Data.size();
 		
 		Field[] fields= ErasmusData.class.getDeclaredFields();
 		Method getter = null;
@@ -53,9 +60,12 @@ public class ErasmusDataService
 		
 		try
 		{
+			// cerco l'attributo indicato nel parametro field tra gli attributi della classe ErasmusData e poi recupero il metodo get corrispondente
 			for (int i=0; i<fields.length && !flag; i++) 
 			{
 				String alias = fields[i].getName();
+				
+				//anche se field viene scritto con o senza maiuscole, l'attributo corrispondente viene comunque trovato
 				if (alias.equalsIgnoreCase(field))
 				{
 					flag = true;
@@ -63,18 +73,49 @@ public class ErasmusDataService
 				}
 			}
 			
+			min=((Number)getter.invoke(Data.get(0))).doubleValue();
+			max=((Number)getter.invoke(Data.get(0))).doubleValue();
+			
+			double x = 0;
+			
 			for (ErasmusData ED : Data)
 			{
-				sum += (double)((Integer)getter.invoke(ED)).intValue();
-				n++;
+				x = ((Number)getter.invoke(ED)).doubleValue();
+				
+				if (x>max)
+					max = x;
+				if (x<min)
+					min = x;
+				
+				sum += x;
 			}
+			
+			avg = sum/count;
+			double temp = 0;
+			
+			for (ErasmusData ED : Data)
+			{
+				x = ((Number)getter.invoke(ED)).doubleValue();
+				
+				temp += Math.pow(x-avg, 2);
+			}
+			
+			devStd = Math.sqrt(temp/count);
 		}
 		catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 		{
 			e.printStackTrace();
 		}
 		
-		return sum/n;
+		statistiche.setField(field);
+		statistiche.setCount(count);
+		statistiche.setSum(sum);
+		statistiche.setMin(min);
+		statistiche.setMax(max);
+		statistiche.setAvg(avg);
+		statistiche.setDevStd(devStd);
+		
+		return statistiche;
 	}
 	
 	public Collection<ErasmusData> getAll()
@@ -84,18 +125,16 @@ public class ErasmusDataService
 	
 	public Collection<MetaData> getMetadata() 
 	{
-		int i=0;
 		List <MetaData> MetaObjects = new ArrayList<MetaData>();
 		Field[] fields= ErasmusData.class.getDeclaredFields();
 		
-		for (Field f : fields) 
+		for (int i=0; i<fields.length; i++) 
 		{
             MetaData newMeta = new MetaData();
-            newMeta.setAlias(f.getName());
+            newMeta.setAlias(fields[i].getName());
             newMeta.setSourceField(Meta[i]);
-            newMeta.setType(f.getType().getSimpleName());
+            newMeta.setType(fields[i].getType().getSimpleName());
             MetaObjects.add(newMeta);
-            i++;
         }
 		
         return MetaObjects;

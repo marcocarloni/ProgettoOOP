@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.MetaData;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.Stats;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.service.ErasmusDataService;
 
 import java.util.Collection;
@@ -29,9 +30,9 @@ public class ErasmusDataController
 		return S.getAll();
 	}
 	
-	@GetMapping ("/average/{field}")
-	public Double getAverage(@PathVariable String field)
+	@GetMapping ("/stats/{field}")
+	public Stats getAverage(@PathVariable String field)
 	{
-		return S.getAverage(field);
+		return S.getStats(field);
 	}
 }
