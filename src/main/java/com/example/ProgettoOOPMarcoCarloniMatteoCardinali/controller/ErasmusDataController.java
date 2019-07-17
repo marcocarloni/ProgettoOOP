@@ -1,8 +1,12 @@
 package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.controller;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
@@ -25,10 +29,19 @@ public class ErasmusDataController
 		return S.getMetadata();
 	}
 	
-	@GetMapping ("/all")
-	public Collection<ErasmusData> getAll() 
+	@GetMapping ("/data")
+	public Collection<ErasmusData> getData(@RequestParam(name="filter", defaultValue="{}") String filter) 
 	{
-		return S.getAll();
+		JSONParser p = new JSONParser();
+		JSONObject s = null;
+		try {
+			s = (JSONObject) p.parse(filter);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return S.getData(s);
 	}
 	
 	//
@@ -43,4 +56,6 @@ public class ErasmusDataController
 		
 		return S.StringCounter(field,name);
 	}
+	
+	
 }

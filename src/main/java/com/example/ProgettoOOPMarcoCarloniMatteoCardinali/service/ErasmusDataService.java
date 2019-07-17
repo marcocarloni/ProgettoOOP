@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.json.simple.*;
 import org.springframework.stereotype.Service;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
@@ -16,6 +17,7 @@ import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.MetaData;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.Stats;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvDownloader;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvParser;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.Filter;
 
 @Service
 public class ErasmusDataService
@@ -119,8 +121,9 @@ public class ErasmusDataService
 		return statistiche;
 	}
 	
-	public Collection<ErasmusData> getAll()
+	public Collection<ErasmusData> getData(JSONObject filter)
 	{
+		Filter f = new Filter(Data, filter);
 		return Data;
 	}
 	
