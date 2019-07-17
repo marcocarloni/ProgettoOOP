@@ -1,4 +1,5 @@
 package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.service;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.StringCount;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -138,6 +139,47 @@ public class ErasmusDataService
         }
 		
         return MetaObjects;
+	}
+	
+	public StringCount StringCounter(String field,String name)
+	{
+		int count=0;
+		Field[] fields= ErasmusData.class.getDeclaredFields();
+		Method getter = null;
+		boolean flag=false;
+		try
+		{
+			// cerco l'attributo indicato nel parametro field tra gli attributi della classe ErasmusData e poi recupero il metodo get corrispondente
+			for (int i=0; i<fields.length && !flag; i++) 
+			{
+				String alias = fields[i].getName();
+							
+				//anche se field viene scritto con o senza maiuscole, l'attributo corrispondente viene comunque trovato
+				if (alias.equalsIgnoreCase(field))
+				{
+					flag = true;
+					getter = ErasmusData.class.getMethod("get" + alias.substring(0,1).toUpperCase() + alias.substring(1));
+				}
+			}
+			
+			
+			for(ErasmusData ED: Data)
+			{
+				
+				if(((String) getter.invoke(ED)).equalsIgnoreCase(name))
+				{
+					count++;
+				}
+				 
+				
+			}
+		}
+		catch (NoSuchMethodException |IllegalAccessException|  IllegalArgumentException | InvocationTargetException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return new StringCount(field,count);
 	}
 	
 }

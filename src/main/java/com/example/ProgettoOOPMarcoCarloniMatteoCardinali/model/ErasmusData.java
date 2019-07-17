@@ -14,6 +14,7 @@ public class ErasmusData
 	private int age;
 	private char sex;
 	private String nationality;
+	//
 	private int subjectArea;
 	private String levelStudy;
 	private int yearsPrior;

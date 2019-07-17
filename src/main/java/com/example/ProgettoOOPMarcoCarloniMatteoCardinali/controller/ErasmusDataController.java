@@ -11,6 +11,7 @@ import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.Stats;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.service.ErasmusDataService;
 
 import java.util.Collection;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.StringCount;
 
 @RestController
 public class ErasmusDataController
@@ -30,9 +31,16 @@ public class ErasmusDataController
 		return S.getAll();
 	}
 	
+	//
 	@GetMapping ("/stats/{field}")
-	public Stats getAverage(@PathVariable String field)
+	public Stats getStats(@PathVariable String field)
 	{
 		return S.getStats(field);
+	}
+	@GetMapping ("/count/{field}/{name}")
+	public StringCount getStringCount(@PathVariable String field,@PathVariable String name)
+	{
+		
+		return S.StringCounter(field,name);
 	}
 }

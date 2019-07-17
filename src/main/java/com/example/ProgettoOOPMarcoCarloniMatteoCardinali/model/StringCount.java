@@ -3,7 +3,7 @@ package com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model;
 /**
  * Classe modellante per il conteggio di stringhe 
  */
-public class StringCounter {
+public class StringCount {
 
     private String field;
     private int count;
@@ -13,8 +13,9 @@ public class StringCounter {
      *
      * @param field
      */
-    public StringCounter(String field) {
+    public StringCount(String field,int count) {
         this.field = field;
+        this.count= count;
     }
 
     public String getField() {
