@@ -70,6 +70,25 @@ public class CsvParser
 	}
 	
 	/**
+	 * Converte le tringhe "Y" e "N" che possono comparire tra i valori 
+	 * del dataset nei valori booleani true e false
+	 *
+	 * @param  s    la stringa da convertire
+	 * @return      il valore booleano corrispondente
+	 */
+	private static boolean StringToBoolean(String s)
+	{
+		boolean b = true;
+		
+		if(s.equals("N"))
+		{
+			b=false;
+		}
+		
+		return b;
+	}
+	
+	/**
 	 * Effettua il parsing riga per riga di tutti i record del dataset
 	 *
 	 * @return      una lista di oggetti MetaData corrispondenti a tutti gli elementi del dataset
@@ -94,7 +113,7 @@ public class CsvParser
 					StringToInt(record[2]),
 					StringToChar(record[3]),
 					record[4],
-					StringToInt(record[5]),
+					record[5],
 					record[6],
 					StringToInt(record[7]),
 					StringToChar(record[8]),
@@ -114,13 +133,14 @@ public class CsvParser
 					StringToInt(record[22]),
 					StringToInt(record[23]),
 					Double.parseDouble(record[24]),
-					StringToChar(record[25]),
+					StringToBoolean(record[25]),
 					record[26],
 					record[27],
 					Double.parseDouble(record[28]),
 					Double.parseDouble(record[29]),
 					StringToChar(record[30]),
 					record[31]);
+			
 					Data.add(ED);
 		}
 		

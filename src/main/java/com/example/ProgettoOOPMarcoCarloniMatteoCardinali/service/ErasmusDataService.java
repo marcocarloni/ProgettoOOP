@@ -59,9 +59,7 @@ public class ErasmusDataService
 		double avg = 0;
 		double devStd = 0;
 		int count = Data.size();
-		
-		Field[] fields= ErasmusData.class.getDeclaredFields();
-		
+				
 		Method getter = null;
 		
 		try
