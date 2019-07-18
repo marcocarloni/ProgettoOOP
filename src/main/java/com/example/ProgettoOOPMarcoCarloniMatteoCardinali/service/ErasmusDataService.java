@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
@@ -17,7 +19,7 @@ import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.MetaData;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.Stats;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvDownloader;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvParser;
-import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.Filter;
+import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.DataFilter;
 
 @Service
 public class ErasmusDataService
@@ -121,10 +123,27 @@ public class ErasmusDataService
 		return statistiche;
 	}
 	
-	public Collection<ErasmusData> getData(JSONObject filter)
+	public Collection<ErasmusData> getData()
 	{
-		Filter f = new Filter(Data, filter);
 		return Data;
+	}
+	
+	public Collection<ErasmusData> getData(String filter)
+	{
+		JSONParser parser = new JSONParser();
+		JSONObject jsonFilter = null;
+		try 
+		{
+			jsonFilter = (JSONObject) parser.parse(filter);
+		} 
+		catch (ParseException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		DataFilter f = new DataFilter(Data, jsonFilter);
+		
+		return f.getFilteredData();
 	}
 	
 	public Collection<MetaData> getMetadata() 
@@ -168,13 +187,10 @@ public class ErasmusDataService
 			
 			for(ErasmusData ED: Data)
 			{
-				
 				if(((String) getter.invoke(ED)).equalsIgnoreCase(name))
 				{
 					count++;
 				}
-				 
-				
 			}
 		}
 		catch (NoSuchMethodException |IllegalAccessException|  IllegalArgumentException | InvocationTargetException e)

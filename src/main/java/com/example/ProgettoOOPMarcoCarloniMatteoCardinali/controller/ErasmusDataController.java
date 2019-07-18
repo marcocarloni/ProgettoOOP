@@ -6,6 +6,8 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,21 +32,17 @@ public class ErasmusDataController
 	}
 	
 	@GetMapping ("/data")
-	public Collection<ErasmusData> getData(@RequestParam(name="filter", defaultValue="{}") String filter) 
+	public Collection<ErasmusData> getData() 
 	{
-		JSONParser p = new JSONParser();
-		JSONObject s = null;
-		try {
-			s = (JSONObject) p.parse(filter);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return S.getData(s);
+		return S.getData();
 	}
 	
-	//
+	@PostMapping ("/filter/data")
+	public Collection<ErasmusData> getData(@RequestBody String filter) 
+	{
+		return S.getData(filter);
+	}
+	
 	@GetMapping ("/stats/{field}")
 	public Stats getStats(@PathVariable String field)
 	{
@@ -53,7 +51,6 @@ public class ErasmusDataController
 	@GetMapping ("/count/{field}/{name}")
 	public StringCount getStringCount(@PathVariable String field,@PathVariable String name)
 	{
-		
 		return S.StringCounter(field,name);
 	}
 	
