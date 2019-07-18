@@ -59,7 +59,7 @@ public class CsvParser
 	 */
 	private static char StringToChar(String s)
 	{
-		char c='\0';
+		char c=' ';
 		
 		if (!s.isEmpty())
 		{

@@ -15,7 +15,6 @@ public class DataFilter
 {
 	private String field;
 	private String type;
-	private String[] values;
 	private List<ErasmusData> FilteredData;
 	
 	public DataFilter(List<ErasmusData> Data, JSONObject Object)
@@ -39,104 +38,180 @@ public class DataFilter
 		//ottengo il valore relativo alla prima chiave, che è un altro JSONObject
 		JSONObject O1 = (JSONObject) Object.get(field);
 		
-		//ottengo la prima chiave di Object, che secondo le regole di sintassi stabilite dal progetto è il nome del filtro da applicare
+		//ottengo la prima chiave di O1, che secondo le regole di sintassi stabilite dal progetto è il nome del filtro da applicare
 		type = (String) O1.keySet().iterator().next();
 		
 		switch (type)
 		{
 			case "$in":
 			{
-				JSONArray a = (JSONArray) O1.get(type);
+				JSONArray array = (JSONArray) O1.get(type);
 				
-				values = new String[a.size()];
-				
-				for (int i=0; i<a.size(); i++)
-				{
-					values[i] = a.get(i).toString();
-				}
-				
-				String value = null;
-				
-				for (ErasmusData ED : Data)
-				{
-					try 
-					{
-						value = (String)getter.invoke(ED);
-					} 
-					catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) 
-					{
-						e.printStackTrace();
-					}
-					
-					boolean recordIsGood=false;
-					// controllo se il valore del campo field del record di Data selezionato  
-					// e uguale ad uno dei valori(specificati dall'utente) contenuti in values[]
-					for(int i=0; i<values.length && !recordIsGood; i++)
-					{
-						if (value.equals(values[i]))
-						{
-							recordIsGood=true;
-						}
-					}
-					
-					// se ED e uguale ad uno dei valori specificati, allora viene aggiunto alla lista filtrata 
-					if (recordIsGood)
-						FilteredData.add(ED);
-					
-				}
+				applyIn(Data, getter, array);
 				
 				break;
 			}
 			
 			case "$nin":
 			{
-				JSONArray a = (JSONArray) O1.get(type);
+				JSONArray array = (JSONArray) O1.get(type);
 				
-				values = new String[a.size()];
-				
-				for (int i=0; i<a.size(); i++)
-				{
-					values[i] = a.get(i).toString();
-				}
-				
-				String value = null;
-				
-				for (ErasmusData ED : Data)
-				{
-					try 
-					{
-						value = (String)getter.invoke(ED);
-					} 
-					catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) 
-					{
-						e.printStackTrace();
-					}
-					
-					boolean recordIsGood=true;
-					// controllo se il valore del campo field del record di Data selezionato  
-					// e diverso da tutti i valori(specificati dall'utente) contenuti in values[]
-					for(int i=0; i<values.length && recordIsGood; i++)
-					{
-						if (value.equals(values[i]))
-						{
-							recordIsGood=false;
-						}
-					}
-					
-					// se ED e diverso da tuutti i valori specificati, allora viene aggiunto alla lista filtrata 
-					if (recordIsGood)
-						FilteredData.add(ED);
-					
-				}
+				applyNin(Data, getter, array);
 				
 				break;
 			}
 			
 			
+			case "$gt":
+			{
+				Double O2 = ((Number)O1.get(type)).doubleValue();
+				
+				try 
+				{
+					applyGt(Data, getter, O2);
+				} 
+				catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) 
+				{
+					e.printStackTrace();
+				}
+				
+				break;
+			}
+			
+			case "$it":
+			{
+				JSONObject O2 = (JSONObject) O1.get(type);
+				
+				try 
+				{
+					applyIt(Data, getter, O2);
+				} 
+				catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) 
+				{
+					e.printStackTrace();
+				}
+				
+				break;
+			}
 		}
 			
 	}
-
+	
+	
+	//funziona solo per i campi di tipo String
+	private void applyIn(List<ErasmusData> Data, Method Getter, JSONArray Values)
+	{
+		String[] V = new String[Values.size()];
+		
+		for (int i=0; i<Values.size(); i++)
+		{
+			V[i] = Values.get(i).toString();
+		}
+		
+		String EDvalue = "";
+		
+		for (ErasmusData ED : Data)
+		{
+			try 
+			{
+				EDvalue = (String)Getter.invoke(ED);
+			} 
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) 
+			{
+				e.printStackTrace();
+			}
+			
+			boolean recordIsGood=false;
+			// controllo se il valore del campo field del record di Data selezionato  
+			// e uguale ad uno dei valori(specificati dall'utente) contenuti in values[]
+			for(int i=0; i<V.length && !recordIsGood; i++)
+			{
+				if (EDvalue.equals(V[i]))
+				{
+					recordIsGood=true;
+				}
+			}
+			
+			// se ED e uguale ad uno dei valori specificati, allora viene aggiunto alla lista filtrata 
+			if (recordIsGood)
+				FilteredData.add(ED);
+			
+		}
+	}
+	
+	//funziona solo per i campi di tipo String
+	private void applyNin(List<ErasmusData> Data, Method Getter, JSONArray Values)
+	{
+		String[] V = new String[Values.size()];
+		
+		for (int i=0; i<Values.size(); i++)
+		{
+			V[i] = Values.get(i).toString();
+		}
+		
+		String EDvalue = "";
+		
+		for (ErasmusData ED : Data)
+		{
+			try 
+			{
+				EDvalue = (String)Getter.invoke(ED);
+			} 
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) 
+			{
+				e.printStackTrace();
+			}
+			
+			boolean recordIsGood=true;
+			// controllo se il valore del campo field del record di Data selezionato  
+			// e diverso da tutti i valori(specificati dall'utente) contenuti in values[]
+			for(int i=0; i<V.length && recordIsGood; i++)
+			{
+				if (EDvalue.equals(V[i]))
+				{
+					recordIsGood=false;
+				}
+			}
+			
+			// se ED e diverso a tutti i valori specificati, allora viene aggiunto alla lista filtrata 
+			if (recordIsGood)
+				FilteredData.add(ED);
+			
+		}
+	}
+	
+	//funziona solo per i campi di tipo int o Double
+	private void applyGt(List<ErasmusData> Data, Method Getter, Double value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	{
+		Double EDValue;
+		
+		for (ErasmusData ED : Data)
+		{
+			EDValue = ((Number)Getter.invoke(ED)).doubleValue();
+			
+			if (EDValue > value)
+			{
+				FilteredData.add(ED);
+			}
+		}
+	}
+	
+	//funziona solo per i campi di tipo int o Double
+	private void applyIt(List<ErasmusData> Data, Method Getter, JSONObject JSONValue) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	{
+		Double value = ((Number)JSONValue.get("$it")).doubleValue();
+		Double EDValue;
+		
+		for (ErasmusData ED : Data)
+		{
+			EDValue = ((Number)Getter.invoke(ED)).doubleValue();
+			
+			if (EDValue < value)
+			{
+				FilteredData.add(ED);
+			}
+		}
+	}
 	
 	public Collection<ErasmusData> getFilteredData()
 	{
