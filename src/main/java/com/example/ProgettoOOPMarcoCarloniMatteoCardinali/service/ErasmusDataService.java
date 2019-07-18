@@ -12,7 +12,9 @@ import java.util.List;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.MetaData;
@@ -59,23 +61,16 @@ public class ErasmusDataService
 		int count = Data.size();
 		
 		Field[] fields= ErasmusData.class.getDeclaredFields();
-		Method getter = null;
 		
-		boolean flag=false;
+		Method getter = null;
 		
 		try
 		{
-			// cerco l'attributo indicato nel parametro field tra gli attributi della classe ErasmusData e poi recupero il metodo get corrispondente
-			for (int i=0; i<fields.length && !flag; i++) 
+			getter = ErasmusData.class.getMethod("get" + field.substring(0,1).toUpperCase() + field.substring(1));
+			
+			if (getter.getReturnType()!=Double.TYPE && getter.getReturnType()!=Integer.TYPE)
 			{
-				String alias = fields[i].getName();
-				
-				//anche se field viene scritto con o senza maiuscole, l'attributo corrispondente viene comunque trovato
-				if (alias.equalsIgnoreCase(field))
-				{
-					flag = true;
-					getter = ErasmusData.class.getMethod("get" + alias.substring(0,1).toUpperCase() + alias.substring(1));
-				}
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo che si sta cercando di inserire('" + field + "') non è di tipo numerico; le statistiche sono calcolabili solo su campi numerici");
 			}
 			
 			min=((Number)getter.invoke(Data.get(0))).doubleValue();
@@ -107,9 +102,14 @@ public class ErasmusDataService
 			
 			devStd = Math.sqrt(temp/count);
 		}
-		catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+		catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 		{
 			e.printStackTrace();
+			return null;
+		}
+		catch (NoSuchMethodException e)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo inserito ('" + field + "') non esiste; usando /metadata è possibile reperire gli alias di tutti i campi");
 		}
 		
 		statistiche.setField(field);
