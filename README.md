@@ -105,9 +105,8 @@ Il progetto mette a disposizione dell'utente un elenco di filtri che permettono 
 | $it  |Minore  | Intero, double |
 | $in | In  | Stringa/stringhe |
 | $nin | Not in |Stringa/stringhe   |
-- **Sintassi body - Conditional filters**
 
-{"field"{"filter":value}}
+- **Sintassi body - Conditional filters**  {"field"{"filter":value}}
 
 **Esempio filtro: maggiore**
 Visualizzo i record con studenti con un'età superiore a 85 anni.
