@@ -44,9 +44,9 @@ L'applicazione segue il **Pattern MVC  ("model-View-Controller")** che prevede l
  
 ## UML
 
- - **Class diagram** :
- - **Sequence diagram**:
- - **Use case diagram**:
+ - **Class diagram** :https://github.com/marcocarloni/ProgettoOOP-Marco-Carloni-Matteo-Cardinali-/blob/master/Resources/UML/ClassDiagram.png
+ - **Sequence diagram**:https://github.com/marcocarloni/ProgettoOOP-Marco-Carloni-Matteo-Cardinali-/blob/master/Resources/UML/SequenceDiagram.png
+ - **Use case diagram**:https://github.com/marcocarloni/ProgettoOOP-Marco-Carloni-Matteo-Cardinali-/blob/master/Resources/UML/UseCaseDiagram.png
 
 # Comandi
 Una volta avviato, il progetto mette a disposizione una serie di API all'indirizzo: http://127.0.0.1:8080 
