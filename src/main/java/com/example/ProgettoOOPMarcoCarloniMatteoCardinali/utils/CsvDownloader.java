@@ -20,7 +20,6 @@ import org.json.simple.parser.ParseException;
  * Classe responsabile del download del file csv contenente i dati.
  * 
  */
-
 public class CsvDownloader 
 {
 	// L'url da cui e possibile reperire il file csv

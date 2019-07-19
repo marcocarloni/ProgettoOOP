@@ -8,6 +8,10 @@ import java.util.List;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
 import com.opencsv.CSVReader;
 
+/**
+ * Classe responsabile del parsing del file csv
+ *
+ */
 public class CsvParser 
 {
 	private String MetaData[];
@@ -91,7 +95,7 @@ public class CsvParser
 	/**
 	 * Effettua il parsing riga per riga di tutti i record del dataset
 	 *
-	 * @return      una lista di oggetti MetaData corrispondenti a tutti gli elementi del dataset
+	 * @return Una lista di oggetti MetaData corrispondenti a tutti gli elementi del dataset
 	 */
 	@SuppressWarnings("deprecation")
 	public CsvParser(String fileName) throws IOException 
@@ -102,7 +106,7 @@ public class CsvParser
 		Data = new ArrayList<ErasmusData>();
 		String[] record = null;
 		
-		//la prima riga contiene i nomi dei campi del dataset, percui viene saltata
+		//la prima riga contiene i nomi dei campi del dataset (i sourcefield)
 		MetaData = reader.readNext();
 		
 		while((record = reader.readNext()) != null)

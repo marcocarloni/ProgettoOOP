@@ -24,7 +24,7 @@ import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvParser;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.DataFilter;
 
 /**
- * Classe responsabile delle operazioni di calcolo e filtraggio sui dati
+ * Classe responsabile delle operazioni di calcolo sui dati e selezione dii dati visualizzati
  */
 @Service
 public class ErasmusDataService
@@ -135,7 +135,6 @@ public class ErasmusDataService
 		return statistiche;
 	}
 	
-	
 	/**
 	 * Restituisce tutti i dati
 	 * 
@@ -172,13 +171,14 @@ public class ErasmusDataService
 	
 	
 	/**
+	 * Restituisce le informazioni relative ai metadata
 	 * 
-	 * 
-	 * @return
+	 * @return	Collezione di oggetti della classe modellante MetaData
 	 */
 	public Collection<MetaData> getMetadata() 
 	{
 		List <MetaData> MetaObjects = new ArrayList<MetaData>();
+		// Vettore di oggetti "Field", che rappresentano i vari campi della classe ErasmusData
 		Field[] fields= ErasmusData.class.getDeclaredFields();
 		
 		for (int i=0; i<fields.length; i++) 
@@ -193,6 +193,13 @@ public class ErasmusDataService
         return MetaObjects;
 	}
 	
+	/**
+	 * Esegue il conteggio del numero di oggetti ErasmusData che hanno name come valore del campo field
+	 * 
+	 * @param field	Il campo i cui valori sono controllati
+	 * @param name La stringa da cercare
+	 * @return Un oggetto di tipo StringCount contente le informazioni relative al conteggio
+	 */
 	public StringCount StringCounter(String field,String name)
 	{
 		int count=0;		
@@ -202,16 +209,13 @@ public class ErasmusDataService
 		{
 			getter = ErasmusData.class.getMethod("get" + field.substring(0,1).toUpperCase() + field.substring(1));
 			
-			if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("D") || getter.getReturnType().getName().equals("I") || getter.getReturnType().getName().equals("Z"))
+			if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("double") || getter.getReturnType().getName().equals("int") || getter.getReturnType().getName().equals("boolean"))
 			{
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo che si sta cercando di inserire('" + field + "') non è di tipo stringa; il conteggio e effettuabile solo su campi di tipo stringa");
 			}
 			
 			for(ErasmusData ED: Data)
-			{
-				System.out.println((String) getter.invoke(ED));
-				System.out.println(name);
-				
+			{	
 				if(((String) getter.invoke(ED)).equals(name))
 				{
 					count++;

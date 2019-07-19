@@ -13,12 +13,21 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
 
+/**
+ * Classe responsabile del filtraggio dei dati
+ */
 public class DataFilter
 {
 	private String field;
 	private String type;
 	private List<ErasmusData> FilteredData;
 	
+	/**
+	 * Costruttore della classe
+	 * 
+	 * @param Data		Lista di ErasmusData su cui applicare il filtro
+	 * @param Object	JSONObject contenete le informazioni sul filtro da applicare
+	 */
 	public DataFilter(List<ErasmusData> Data, JSONObject Object)
 	{
 		FilteredData = new ArrayList<ErasmusData>();
@@ -50,8 +59,8 @@ public class DataFilter
 		switch (type)
 		{
 			case "$in":
-			{
-				if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("D") || getter.getReturnType().getName().equals("I") || getter.getReturnType().getName().equals("Z"))
+			{				
+				if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("double") || getter.getReturnType().getName().equals("int") || getter.getReturnType().getName().equals("boolean"))
 				{
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo('" + field + "') su cui si desidera applicare il filtro non e di tipo String; il filtro '$in' e applicabile solo a campi di tipo stringa");
 				}
@@ -65,7 +74,7 @@ public class DataFilter
 			
 			case "$nin":
 			{
-				if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("D") || getter.getReturnType().getName().equals("I") || getter.getReturnType().getName().equals("Z"))
+				if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("double") || getter.getReturnType().getName().equals("int") || getter.getReturnType().getName().equals("boolean"))
 				{
 					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo('" + field + "') su cui si desidera applicare il filtro non e di tipo String; il filtro '$nin' e applicabile solo a campi di tipo stringa");
 				}
@@ -120,11 +129,16 @@ public class DataFilter
 				break;
 			}
 		}
-			
 	}
 	
-	
-	//funziona solo per i campi di tipo String
+
+	/**
+	 * Applica il filtro $in alla lista Data, usando i valori contenuti in Values
+	 * 
+	 * @param Data		La lista di dati su cui applicare il filtro
+	 * @param Getter	Metodo getter necessario per ottenere il valori dei campi degli oggetti di Data
+	 * @param Values	Un JSONArray contenente i diversi valori da applicare nel filtro
+	 */
 	private void applyIn(List<ErasmusData> Data, Method Getter, JSONArray Values)
 	{
 		String[] V = new String[Values.size()];
@@ -165,7 +179,13 @@ public class DataFilter
 		}
 	}
 	
-	//funziona solo per i campi di tipo String
+	/**
+	 * Applica il filtro $nin alla lista Data, usando i valori contenuti in Values
+	 * 
+	 * @param Data		La lista di dati su cui applicare il filtro
+	 * @param Getter	Metodo getter necessario per ottenere il valori dei campi degli oggetti di Data
+	 * @param Values	Un JSONArray contenente i diversi valori da applicare nel filtro
+	 */
 	private void applyNin(List<ErasmusData> Data, Method Getter, JSONArray Values)
 	{
 		String[] V = new String[Values.size()];
@@ -206,7 +226,13 @@ public class DataFilter
 		}
 	}
 	
-	//funziona solo per i campi di tipo int o Double
+	/**
+	 * Applica il filtro $gt alla lista Data, usando il valore value
+	 * 
+	 * @param Data		La lista di dati su cui applicare il filtro
+	 * @param Getter	Metodo getter necessario per ottenere il valori dei campi degli oggetti di Data
+	 * @param Value		Il valore in formato Double da usare nell'applicazione del filtro
+	 */
 	private void applyGt(List<ErasmusData> Data, Method Getter, Double Value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		Double EDValue;
@@ -222,7 +248,13 @@ public class DataFilter
 		}
 	}
 	
-	//funziona solo per i campi di tipo int o Double
+	/**
+	 * Applica il filtro $it alla lista Data, usando il valore value
+	 * 
+	 * @param Data		La lista di dati su cui applicare il filtro
+	 * @param Getter	Metodo getter necessario per ottenere il valori dei campi degli oggetti di Data
+	 * @param Value		Il valore in formato Double da usare nell'applicazione del filtro
+	 */
 	private void applyIt(List<ErasmusData> Data, Method Getter, Double Value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		Double EDValue;
@@ -238,6 +270,11 @@ public class DataFilter
 		}
 	}
 	
+	/**
+	 * Restituisce i dati flitrati
+	 * 
+	 * @return Collection con ErasmusData contenente i dati filtrati
+	 */
 	public Collection<ErasmusData> getFilteredData()
 	{
 		return FilteredData;
