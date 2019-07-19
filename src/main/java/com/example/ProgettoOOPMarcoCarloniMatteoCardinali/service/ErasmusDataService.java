@@ -103,7 +103,6 @@ public class ErasmusDataService
 		catch ( IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 		{
 			e.printStackTrace();
-			return null;
 		}
 		catch (NoSuchMethodException e)
 		{
@@ -163,40 +162,38 @@ public class ErasmusDataService
 	
 	public StringCount StringCounter(String field,String name)
 	{
-		int count=0;
-		Field[] fields= ErasmusData.class.getDeclaredFields();
+		int count=0;		
 		Method getter = null;
-		boolean flag=false;
+		
 		try
 		{
-			// cerco l'attributo indicato nel parametro field tra gli attributi della classe ErasmusData e poi recupero il metodo get corrispondente
-			for (int i=0; i<fields.length && !flag; i++) 
-			{
-				String alias = fields[i].getName();
-							
-				//anche se field viene scritto con o senza maiuscole, l'attributo corrispondente viene comunque trovato
-				if (alias.equalsIgnoreCase(field))
-				{
-					flag = true;
-					getter = ErasmusData.class.getMethod("get" + alias.substring(0,1).toUpperCase() + alias.substring(1));
-				}
-			}
+			getter = ErasmusData.class.getMethod("get" + field.substring(0,1).toUpperCase() + field.substring(1));
 			
+			if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("D") || getter.getReturnType().getName().equals("I") || getter.getReturnType().getName().equals("Z"))
+			{
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo che si sta cercando di inserire('" + field + "') non è di tipo stringa; il conteggio e effettuabile solo su campi di tipo stringa");
+			}
 			
 			for(ErasmusData ED: Data)
 			{
-				if(((String) getter.invoke(ED)).equalsIgnoreCase(name))
+				System.out.println((String) getter.invoke(ED));
+				System.out.println(name);
+				
+				if(((String) getter.invoke(ED)).equals(name))
 				{
 					count++;
 				}
 			}
 		}
-		catch (NoSuchMethodException |IllegalAccessException|  IllegalArgumentException | InvocationTargetException e)
+		catch (IllegalAccessException|  IllegalArgumentException | InvocationTargetException e)
 		{
 			e.printStackTrace();
 		}
+		catch (NoSuchMethodException e)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo inserito ('" + field + "') non esiste; usando /metadata è possibile reperire gli alias di tutti i campi");
+		}
 		
 		return new StringCount(field,count);
-	}
-	
+	}	
 }
