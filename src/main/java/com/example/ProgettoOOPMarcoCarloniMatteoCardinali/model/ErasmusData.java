@@ -122,7 +122,10 @@ public class ErasmusData
 		this.qualificationHost = qualificationHost;
 	}
 	
-	
+	/**
+	 * Restituisce una stringa contenente i valori dell'oggetto ErasmusData
+	 * 
+	 */
 	@Override
 	public String toString() 
 	{

@@ -23,21 +23,29 @@ import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvDownloader;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.CsvParser;
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.utils.DataFilter;
 
+/**
+ * Classe responsabile delle operazioni di calcolo e filtraggio sui dati
+ */
 @Service
 public class ErasmusDataService
 {
 	private List<ErasmusData> Data;
 	private String Meta[];
 	
+	/**
+	 * Costruttore della classe
+	 */
 	public ErasmusDataService()
 	{
 		String fileName = "Dataset.csv";
 		
+		//Effettuo il download del dataset
 		CsvDownloader downloader = new CsvDownloader();
 		downloader.Download(fileName);
 		
 		try 
 		{
+			//Effettuo il parsing del dataset e  ottengo i dati e i metadati
 			CsvParser parser = new CsvParser(fileName);
 			Meta=parser.getMetaData();
 			Data=parser.getData();
@@ -48,9 +56,15 @@ public class ErasmusDataService
 		}
 	}
 	
+	/**
+	 * Esegue il calcolo delle statistiche per il campo specificato
+	 * e le restituisce attraverso un oggetto di tipo Stats
+	 * 
+	 * @param field Il campo di cui si richiedono le statistiche (deve essere di tipo numerico)
+	 * @return		Un oggetto di tipo Stats, contenente le statistiche relative al campo richiesto
+	 */
 	public Stats getStats(String field) 
 	{
-		
 		Stats statistiche = new Stats();
 		
 		double sum = 0;
@@ -64,6 +78,7 @@ public class ErasmusDataService
 		
 		try
 		{
+			// Conoscendo la sintassi dei metodi getter posso ottenere il metodo get corrispondente al campo indicato; il campo deve pero essere inserito cosi come e chiamato nella classe ErasmusData
 			getter = ErasmusData.class.getMethod("get" + field.substring(0,1).toUpperCase() + field.substring(1));
 			
 			if (getter.getReturnType()!=Double.TYPE && getter.getReturnType()!=Integer.TYPE)
@@ -120,11 +135,23 @@ public class ErasmusDataService
 		return statistiche;
 	}
 	
+	
+	/**
+	 * Restituisce tutti i dati
+	 * 
+	 * @return Collection di ErasmusData contenente tutti i record del dataset
+	 */
 	public Collection<ErasmusData> getData()
 	{
 		return Data;
 	}
 	
+	/**
+	 * Restituisce i dati filtrati
+	 * 
+	 * @param filter Il filtro da applicare ai dati
+	 * @return		 I dati filtrati
+	 */
 	public Collection<ErasmusData> getData(String filter)
 	{
 		JSONParser parser = new JSONParser();
@@ -143,6 +170,12 @@ public class ErasmusDataService
 		return f.getFilteredData();
 	}
 	
+	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
 	public Collection<MetaData> getMetadata() 
 	{
 		List <MetaData> MetaObjects = new ArrayList<MetaData>();

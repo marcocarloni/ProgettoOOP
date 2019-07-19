@@ -17,15 +17,20 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
 /**
- * Classe per la gestione dei dati che vengono ricevuti al primo avvio partendo dal
- * file json assegnato: dal json ci si riconduce all'url contenente il file .csv d' interesse.
+ * Classe responsabile del download del file csv contenente i dati.
+ * 
  */
 
 public class CsvDownloader 
 {
-
+	// L'url da cui e possibile reperire il file csv
 	private String fileUrl;
 	
+	/**
+	 * Costruttore della classe.
+	 * Si occupa di reperire l'url del file csv a partire dal file xml reperito dall'url
+	 * specificato alla consegna del progetto
+	 */
 	public CsvDownloader() 
 	{
 		try 
@@ -71,7 +76,7 @@ public class CsvDownloader
 	
 	
 	/**
-	 * Effettua il download del file indicato e lo rinomina
+	 * Effettua il download del file e lo rinomina
 	 *
 	 * @param fileName	Il nome da dare al file una volta scaricato
 	 */
@@ -79,16 +84,16 @@ public class CsvDownloader
 	{
 	    try (InputStream in = URI.create(fileUrl).toURL().openStream()) 
 	    {
-	    	if(Files.exists(Paths.get(fileName), LinkOption.NOFOLLOW_LINKS ))
+	    	//Il file verra scaricato solo nel caso in cui non sia gia stato scaricato in precedenza
+	    	//(questo puo richiedere anche molto tempo, fino a diversi minuti)
+	    	if(!Files.exists(Paths.get(fileName), LinkOption.NOFOLLOW_LINKS ))
 	    	{
-	    		System.out.println("Il dataset è gia stato scaricato in precedenza...");
-	    	}
-	    	else Files.copy(in, Paths.get(fileName));
+	    		Files.copy(in, Paths.get(fileName));
+	    	} 
 	    }
 	    catch (Exception e)
 	    {
 	    	e.printStackTrace();
 	    }
-	    
 	}
 }

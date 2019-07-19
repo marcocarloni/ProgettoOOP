@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.ProgettoOOPMarcoCarloniMatteoCardinali.model.ErasmusData;
 
@@ -30,9 +32,13 @@ public class DataFilter
 		{
 			getter = ErasmusData.class.getMethod("get" + field.substring(0,1).toUpperCase() + field.substring(1));
 		} 
-		catch (NoSuchMethodException | SecurityException e) 
+		catch (SecurityException e) 
 		{
 			e.printStackTrace();
+		}
+		catch (NoSuchMethodException e)
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo inserito ('" + field + "') non esiste; usando /metadata è possibile reperire gli alias di tutti i campi");
 		}
 		
 		//ottengo il valore relativo alla prima chiave, che è un altro JSONObject
@@ -45,7 +51,12 @@ public class DataFilter
 		{
 			case "$in":
 			{
-				JSONArray array = (JSONArray) O1.get(type);
+				if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("D") || getter.getReturnType().getName().equals("I") || getter.getReturnType().getName().equals("Z"))
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo('" + field + "') su cui si desidera applicare il filtro non e di tipo String; il filtro '$in' e applicabile solo a campi di tipo stringa");
+				}
+				
+				JSONArray array = (JSONArray) O1.get(type);	
 				
 				applyIn(Data, getter, array);
 				
@@ -54,6 +65,11 @@ public class DataFilter
 			
 			case "$nin":
 			{
+				if ( getter.getReturnType().getName().equals("char") || getter.getReturnType().getName().equals("D") || getter.getReturnType().getName().equals("I") || getter.getReturnType().getName().equals("Z"))
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo('" + field + "') su cui si desidera applicare il filtro non e di tipo String; il filtro '$nin' e applicabile solo a campi di tipo stringa");
+				}
+				
 				JSONArray array = (JSONArray) O1.get(type);
 				
 				applyNin(Data, getter, array);
@@ -64,6 +80,11 @@ public class DataFilter
 			
 			case "$gt":
 			{
+				if (getter.getReturnType()!=Double.TYPE && getter.getReturnType()!=Integer.TYPE)
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo('" + field + "') su cui si desidera applicare il filtro non e di tipo numerico; il filtro '$gt' e applicabile solo a campi di tipo numerico");
+				}
+				
 				Double O2 = ((Number)O1.get(type)).doubleValue();
 				
 				try 
@@ -80,7 +101,12 @@ public class DataFilter
 			
 			case "$it":
 			{
-				JSONObject O2 = (JSONObject) O1.get(type);
+				if (getter.getReturnType()!=Double.TYPE && getter.getReturnType()!=Integer.TYPE)
+				{
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Errore, il campo('" + field + "') su cui si desidera applicare il filtro non e di tipo numerico; il filtro '$it' e applicabile solo a campi di tipo numerico");
+				}
+				
+				Double O2 = ((Number)O1.get(type)).doubleValue();
 				
 				try 
 				{
@@ -181,7 +207,7 @@ public class DataFilter
 	}
 	
 	//funziona solo per i campi di tipo int o Double
-	private void applyGt(List<ErasmusData> Data, Method Getter, Double value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	private void applyGt(List<ErasmusData> Data, Method Getter, Double Value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		Double EDValue;
 		
@@ -189,7 +215,7 @@ public class DataFilter
 		{
 			EDValue = ((Number)Getter.invoke(ED)).doubleValue();
 			
-			if (EDValue > value)
+			if (EDValue > Value)
 			{
 				FilteredData.add(ED);
 			}
@@ -197,16 +223,15 @@ public class DataFilter
 	}
 	
 	//funziona solo per i campi di tipo int o Double
-	private void applyIt(List<ErasmusData> Data, Method Getter, JSONObject JSONValue) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	private void applyIt(List<ErasmusData> Data, Method Getter, Double Value) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
-		Double value = ((Number)JSONValue.get("$it")).doubleValue();
 		Double EDValue;
 		
 		for (ErasmusData ED : Data)
 		{
 			EDValue = ((Number)Getter.invoke(ED)).doubleValue();
 			
-			if (EDValue < value)
+			if (EDValue < Value)
 			{
 				FilteredData.add(ED);
 			}
