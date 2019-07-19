@@ -49,7 +49,7 @@ L'applicazione segue il **Pattern MVC  ("model-View-Controller")** che prevede l
  - **Use case diagram**:
 
 # Comandi
-Una volta avviato, il progetto mette a disposizione una serie di API all'indirizzo: http://127.0.0.1:8080/ 
+Una volta avviato, il progetto mette a disposizione una serie di API all'indirizzo: http://127.0.0.1:8080 
  ## Visualizzazione di tutti i dati
 
 - **Comando**: /data 
