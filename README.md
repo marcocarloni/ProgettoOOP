@@ -108,6 +108,7 @@ Il progetto mette a disposizione dell'utente un elenco di filtri che permettono 
 - **Sintassi body - Conditional filters**
 
 {"field"{"filter":value}}
+
 **Esempio filtro: maggiore**
 Visualizzo i record con studenti con un'età superiore a 85 anni.
 {"age"{"$gt":85}}
