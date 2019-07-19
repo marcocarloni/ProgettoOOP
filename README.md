@@ -216,7 +216,7 @@ Visualizzo i record con studenti minorenni.
         "ectscreditStudy": 0,
         "ectscreditWork": 0
         
-   - **Sintassi body - Logical filters:**  {"field"{"filter":["value1","value2"...]}}
+   - **Sintassi body - Logical filters:**  {"field"{"filter":["value1","value2",...]}}
    
    **Esempio filtro: in**
 Visualizzo i record in cui il valore del campo "hostInstitution" è uguale ad uno dei valori passati nel filtro.
